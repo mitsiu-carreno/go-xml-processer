@@ -4,11 +4,23 @@ import (
 	"io/ioutil"
 	"encoding/xml"
 	"fmt"
+	"os"
 )
 
-type Factura struct{
-
+type Factura struct { 
+	
+	Receptor []struct {
+		Nombre string `xml:"nombre,attr"`
+	} `xml:"Receptor"`
+	
 }
+
+type Receptor struct {
+	Receptor []struct {
+		Nombre string `xml:"nombre,attr"`
+	} `xml:"Receptor"`
+}
+
 
 func check(err error){
 	if err != nil{
@@ -18,14 +30,15 @@ func check(err error){
 }
 
 func main(){
-	xmlFile, err := os.Open("assets/3596656.xml")
+	xmlFile, err := os.Open("./assets/XML/3596656.xml")
+	//xmlFile, err := os.Open("./assets/XML/test.xml")
 	check(err)
 	defer xmlFile.Close()
 
 	b, err := ioutil.ReadAll(xmlFile)
 
-	var q Query
+	var q Factura
 	xml.Unmarshal(b, &q)
 
-	fmt.Println()
+	fmt.Println(q)
 }

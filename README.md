@@ -10,3 +10,6 @@ https://larry-price.com/blog/2015/12/04/xml-parsing-in-go/
 
 type, attr
 https://play.golang.org/p/qiSoxxb5tp
+
+type any
+https://stackoverflow.com/questions/30256729/how-to-traverse-through-xml-data-in-golang
