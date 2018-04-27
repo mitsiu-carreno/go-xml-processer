@@ -1,26 +1,25 @@
 package main
 
 import (
-	"io/ioutil"
+	"bytes"
 	"encoding/xml"
 	"fmt"
 	"os"
 )
 
-type Factura struct { 
-	
-	Receptor []struct {
-		Nombre string `xml:"nombre,attr"`
-	} `xml:"Receptor"`
-	
+type Node struct{
+	XMLName xml.Name
+	Attrs 	[]xml.Attr 	`xml:"-"`
+	Content []byte		`xml:",innerxml"`
+	Nodes	[]Node		`xml:",any"`
 }
 
-type Receptor struct {
-	Receptor []struct {
-		Nombre string `xml:"nombre,attr"`
-	} `xml:"Receptor"`
-}
+func (n *Node) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+	n.Attrs = start.Attr
+	type node Node
 
+	return d.DecodeElement((*node)(n), &start)
+}
 
 func check(err error){
 	if err != nil{
@@ -35,10 +34,28 @@ func main(){
 	check(err)
 	defer xmlFile.Close()
 
-	b, err := ioutil.ReadAll(xmlFile)
+	buf := bytes.NewBuffer(xmlFile)
 
-	var q Factura
-	xml.Unmarshal(b, &q)
+	dec := xml.NewDecoder(buf)
 
-	fmt.Println(q)
+	var n Node
+	err = dec.Decode(&n)
+	check(err)
+	/*
+	walk([]Node{n}, func(n Node) bool {
+				fmt.Println(string(n.XMLName))
+				fmt.Println(string(n.Attrs))
+				fmt.Println(string(n.Content))
+				return true
+			}
+		)
+		*/
+}
+
+func walk(nodes []Node, f func(Node) bool){
+	for _, n := range nodes {
+		if(f(n)){
+			walk(n.Nodes, f)
+		}
+	}
 }
