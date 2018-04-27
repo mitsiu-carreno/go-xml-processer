@@ -43,9 +43,8 @@ func main(){
 	check(err)
 	
 	walk( []Node{n}, func(n Node) bool {
-				fmt.Println(n.XMLName)
-				fmt.Println(n.Attrs)
-				fmt.Println(string(n.Content))
+				//fmt.Println("xmlName: ", n.XMLName, " attrs: ", n.Attrs, " contents: ", string(n.Content))
+				fmt.Println(" attrs: ", n.Attrs, " contents: ", string(n.Content))				
 				return true
 		})
 	
