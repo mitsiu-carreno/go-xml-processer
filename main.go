@@ -1,7 +1,7 @@
 package main
 
 import (
-	"bytes"
+	_"bytes"
 	"encoding/xml"
 	"fmt"
 	"os"
@@ -34,22 +34,21 @@ func main(){
 	check(err)
 	defer xmlFile.Close()
 
-	buf := bytes.NewBuffer(xmlFile)
+	//buf := bytes.NewBuffer(xmlFile)
 
-	dec := xml.NewDecoder(buf)
+	dec := xml.NewDecoder(xmlFile)
 
 	var n Node
 	err = dec.Decode(&n)
 	check(err)
-	/*
-	walk([]Node{n}, func(n Node) bool {
-				fmt.Println(string(n.XMLName))
-				fmt.Println(string(n.Attrs))
+	
+	walk( []Node{n}, func(n Node) bool {
+				fmt.Println(n.XMLName)
+				fmt.Println(n.Attrs)
 				fmt.Println(string(n.Content))
 				return true
-			}
-		)
-		*/
+		})
+	
 }
 
 func walk(nodes []Node, f func(Node) bool){
